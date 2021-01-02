@@ -6,6 +6,19 @@ export interface Frame {
     score: number;
 }
 
+export interface PipePair{
+    topPipe: Pipe;
+    bottomPipe: Pipe;
+    show: boolean;
+    left: number;
+    width: number;
+}
+
+export interface Pipe{
+    top: number;
+    height: number;
+}
+
 export class GameController {
     private frame: Frame;
     private velocity = 0;
