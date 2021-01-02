@@ -10,7 +10,7 @@ export class GameController {
     private frame: Frame;
     private velocity = 0;
 
-    constructor(public readonly height = 800, public readonly width = 400){
+    constructor(public readonly height = 650, public readonly width = 400){
 
     }
 
