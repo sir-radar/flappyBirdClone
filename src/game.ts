@@ -4,6 +4,8 @@ export interface Frame {
     width: number;
     height: number;
     score: number;
+    firstPipe: PipePair;
+    secondPipe: PipePair;
 }
 
 export interface PipePair{
@@ -23,19 +25,54 @@ export class GameController {
     private frame: Frame;
     private velocity = 0;
 
-    constructor(public readonly height = 650, public readonly width = 400){
+    constructor(
+        public readonly height = 650,
+        public readonly width = 400,
+        public readonly pipeWidth = 50,
+        public readonly pipeGap = 150,
+        public readonly minTopForTopPipe = 70,
+        public readonly maxTopForTopPipe = 350,
 
-    }
+    ){}
 
     public newGame(){
+        let firstPipe = this.createPipe(true);
+        let secondPipe = this.createPipe(false);
+
         this.frame = {
             score: 0,
             width: this.width,
             height: this.height,
             gameOver: false,
             gameStarted: false,
+            firstPipe,
+            secondPipe
         }
 
         return this.frame;
+    }
+
+    private randomYForTopPipe():number{
+        return (
+            this.minTopForTopPipe + (this.maxTopForTopPipe - this.minTopForTopPipe) * Math.random()
+        );
+    }
+
+    private createPipe(show: boolean): PipePair{
+        const height = this.randomYForTopPipe();
+
+        return {
+            topPipe:{
+                top: 0,
+                height
+            },
+            bottomPipe:{
+                top: height + this.pipeGap,
+                height: this.height
+            },
+            left: this.width - this.pipeWidth,
+            width: this.pipeWidth,
+            show,
+        }
     }
 }
