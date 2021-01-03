@@ -89,6 +89,13 @@ export class GameController {
             this.frame.firstPipe
         );
 
+        //Gravity
+        if(this.velocity > 0){
+            this.velocity -= this.slowVelocityBy;
+        }
+
+        this.frame.bird.top += Math.pow(this.gravity, 2) - this.velocity;
+
         return this.frame;
     }
 
