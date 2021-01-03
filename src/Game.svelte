@@ -1,9 +1,13 @@
 <script lang="ts">
     import { GameController } from "./game";
     import Pipe from "./Pipe.svelte";
+    import Bird from "./Bird.svelte";
     const game = new GameController();
     let frame = game.newGame();
 
+    function jump() {
+        game.jump();
+    }
     setInterval(() => {
         // frame = game.nextFrame();
     }, 1000 / 90);
@@ -26,7 +30,10 @@
 </style>
 
 <main style="width:{frame.width}px; height:{frame.height}px;" class="game">
+    <Bird bird={frame.bird} />
     <Pipe pipe={frame.firstPipe} />
     <Pipe pipe={frame.secondPipe} />
     <section style="height:{frame.ground.height}px;" id="ground" />
 </main>
+
+<svelte:window on:click={jump} />

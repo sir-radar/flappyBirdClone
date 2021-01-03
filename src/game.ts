@@ -92,6 +92,12 @@ export class GameController {
         return this.frame;
     }
 
+    public jump(){
+        if(this.velocity <= 0){
+            this.velocity += this.jumpVelocity;
+        }
+    }
+
     private randomYForTopPipe():number{
         return (
             this.minTopForTopPipe + (this.maxTopForTopPipe - this.minTopForTopPipe) * Math.random()
