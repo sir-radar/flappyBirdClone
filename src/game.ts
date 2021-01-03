@@ -6,6 +6,11 @@ export interface Frame {
     score: number;
     firstPipe: PipePair;
     secondPipe: PipePair;
+    ground: Ground;
+}
+
+export interface Ground {
+    height: number;
 }
 
 export interface PipePair{
@@ -32,6 +37,9 @@ export class GameController {
         public readonly pipeGap = 150,
         public readonly minTopForTopPipe = 70,
         public readonly maxTopForTopPipe = 350,
+        public readonly generateNewPipePercent = 0.7,
+        public readonly speed = 1,
+        public readonly groundHeight = 20,
 
     ){}
 
@@ -46,8 +54,24 @@ export class GameController {
             gameOver: false,
             gameStarted: false,
             firstPipe,
-            secondPipe
+            secondPipe,
+            ground:{
+                height: this.groundHeight
+            }
         }
+
+        return this.frame;
+    }
+
+    public nextFrame(){
+        this.frame.firstPipe = this.movePipe(
+            this.frame.firstPipe,
+            this.frame.secondPipe
+        );
+        this.frame.secondPipe = this.movePipe(
+            this.frame.secondPipe,
+            this.frame.firstPipe
+        );
 
         return this.frame;
     }
@@ -58,7 +82,7 @@ export class GameController {
         );
     }
 
-    private createPipe(show: boolean): PipePair{
+    private createPipe(show: boolean): PipePair {
         const height = this.randomYForTopPipe();
 
         return {
@@ -75,4 +99,26 @@ export class GameController {
             show,
         }
     }
+
+    private movePipe(pipe: PipePair, otherPipe: PipePair){
+        if(pipe.show && pipe.left <= this.pipeWidth * -1){
+            pipe.show = false;
+            return pipe;
+        }
+
+        if(pipe.show){
+            pipe.left -= this.speed;
+        }
+
+        if(
+            otherPipe.left < this.width * (1 - this.generateNewPipePercent) &&
+            otherPipe.show && !pipe.show
+        ){
+            return this.createPipe(true)
+        }
+
+        return pipe;
+    }
+
+
 }
