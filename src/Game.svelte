@@ -59,14 +59,30 @@
         outline: none;
         font-size: 15px;
     }
+    #score {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        font-size: 20px;
+        z-index: 10;
+        padding: 5px;
+        font-family: cursive;
+        background-color: white;
+        user-select: none;
+    }
 </style>
 
 <main style="width:{frame.width}px; height:{frame.height}px;" class="game">
+    <section id="score">{frame.score}</section>
     <Bird bird={frame.bird} />
     <Pipe pipe={frame.firstPipe} />
     <Pipe pipe={frame.secondPipe} />
     {#if frame.gameOver || !frame.gameStarted}
         <section id="init-screen">
+            {#if frame.gameOver}
+                <h2>Game Over</h2>
+                <h2>Score {frame.score}</h2>
+            {/if}
             <button on:click={startGame}>Start Game</button>
         </section>
     {/if}
