@@ -80,6 +80,9 @@ export class GameController {
     }
 
     public nextFrame(){
+        if(this.frame.gameOver || !this.frame.gameStarted){
+            return this.frame
+        }
         this.frame.firstPipe = this.movePipe(
             this.frame.firstPipe,
             this.frame.secondPipe
@@ -89,7 +92,20 @@ export class GameController {
             this.frame.firstPipe
         );
 
-        //Gravity
+        //checks if bird hits the ground
+        if(this.frame.bird.top >= this.height - this.groundHeight - this.birdSize){
+            this.frame.bird.top = this.height - this.groundHeight - this.birdSize;
+            this.frame.gameOver = true;
+            return this.frame;
+        }
+
+        //checks if bird collid with ppe
+        if(this.hasCollidedWithPipe()){
+            this.frame.gameOver = true;
+            return this.frame;
+        }
+
+         //Gravity
         if(this.velocity > 0){
             this.velocity -= this.slowVelocityBy;
         }
@@ -99,10 +115,42 @@ export class GameController {
         return this.frame;
     }
 
+    public start(){
+        this.newGame();
+        this.frame.gameStarted =  true;
+        return this.frame;
+    }
+
     public jump(){
         if(this.velocity <= 0){
             this.velocity += this.jumpVelocity;
         }
+    }
+
+    private hasCollidedWithPipe(){
+        if(this.frame.firstPipe.show && this.checkPipe(this.frame.firstPipe.left)){
+            return !(
+                this.frame.bird.top > this.frame.firstPipe.topPipe.height &&
+                this.frame.bird.top + this.birdSize < this.frame.firstPipe.bottomPipe.top
+            );
+        }
+
+        if(
+            this.frame.secondPipe.show &&
+            this.checkPipe(this.frame.secondPipe.left)
+        ){
+            return !(
+                this.frame.bird.top > this.frame.secondPipe.topPipe.height
+                &&
+                this.frame.bird.top + this.birdSize < this.frame.secondPipe.bottomPipe.top
+            )
+        }
+
+        return false;
+    }
+
+    private checkPipe(left: number){
+        return (left <= this.birdX + this.birdSize && left + this.pipeWidth >= this.birdX);
     }
 
     private randomYForTopPipe():number{

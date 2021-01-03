@@ -8,8 +8,12 @@
     function jump() {
         game.jump();
     }
+
+    function startGame() {
+        frame = game.start();
+    }
     setInterval(() => {
-        // frame = game.nextFrame();
+        frame = game.nextFrame();
     }, 1000 / 90);
 </script>
 
@@ -27,12 +31,45 @@
         bottom: 0;
         left: 0;
     }
+    #init-screen {
+        user-select: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        font-family: monospace;
+    }
+    #init-screen h2 {
+        text-align: center;
+    }
+    #init-screen button {
+        font-size: 16px;
+        border: none;
+        border-radius: none;
+        background-color: ghostwhite;
+        padding: 10px;
+        cursor: pointer;
+        outline: none;
+        transition: ease-in-out 0.2s font-size;
+        display: block;
+        margin: 0 auto;
+    }
+    #init-screen button:active,
+    #init-screen button:focus {
+        outline: none;
+        font-size: 15px;
+    }
 </style>
 
 <main style="width:{frame.width}px; height:{frame.height}px;" class="game">
     <Bird bird={frame.bird} />
     <Pipe pipe={frame.firstPipe} />
     <Pipe pipe={frame.secondPipe} />
+    {#if frame.gameOver || !frame.gameStarted}
+        <section id="init-screen">
+            <button on:click={startGame}>Start Game</button>
+        </section>
+    {/if}
     <section style="height:{frame.ground.height}px;" id="ground" />
 </main>
 
